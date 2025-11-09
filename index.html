@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CollabCanvas — Realtime Drawing</title>
+  <meta name="description" content="Beautiful, framework-free realtime collaborative canvas" />
+  <link rel="stylesheet" href="./style.css" />
+  <!-- Optional Socket.IO client if you run a socket.io backend as well -->
+  <!-- <script src="/socket.io/socket.io.js"></script> -->
+</head>
+<body>
+  <header class="appbar" role="banner">
+    <div class="brand" aria-label="App name">
+      <span class="logo" aria-hidden>🖌️</span>
+      <span id="room-name">CollabCanvas</span>
+    </div>
+
+    <div class="toolbar" role="toolbar" aria-label="Drawing tools">
+      <div class="group">
+        <button id="tool-brush" class="btn btn-toggle active" aria-pressed="true" title="Brush (B)">Brush</button>
+        <button id="tool-eraser" class="btn btn-toggle" aria-pressed="false" title="Eraser (E)">Eraser</button>
+        <button id="tool-line" class="btn btn-toggle" title="Line (L)">Line</button>
+        <button id="tool-rect" class="btn btn-toggle" title="Rectangle (R)">Rect</button>
+        <button id="tool-circle" class="btn btn-toggle" title="Circle (C)">Circle</button>
+        <button id="tool-text" class="btn btn-toggle" title="Text (T)">Text</button>
+        <button id="tool-image" class="btn" title="Add Image">Image</button>
+        <input type="file" id="imageInput" accept="image/*" hidden />
+      </div>
+
+      <div class="group">
+        <label class="ctrl" for="color">
+          <span>Color</span>
+          <input type="color" id="color" value="#58a6ff" />
+        </label>
+        <label class="ctrl" for="size">
+          <span>Size</span>
+          <input type="range" id="size" min="1" max="48" value="6" />
+          <span id="size-val" class="size-val">6</span>
+        </label>
+      </div>
+
+      <div class="group">
+        <button id="undo" class="btn" title="Undo (Ctrl/Cmd+Z)">Undo</button>
+        <button id="redo" class="btn" title="Redo (Ctrl/Cmd+Y)">Redo</button>
+        <button id="clear" class="btn btn-danger" title="Clear canvas">Clear</button>
+      </div>
+
+      <div class="group">
+        <button id="export-png" class="btn">Export PNG</button>
+        <button id="export-json" class="btn">Export JSON</button>
+        <label class="btn" for="import-json">Import JSON</label>
+        <input id="import-json" type="file" accept="application/json" hidden />
+      </div>
+
+      <div class="spacer" aria-hidden="true"></div>
+      <div class="status">
+        <span id="transport" class="badge">detecting…</span>
+        <span id="latency" class="badge muted" title="Approx network latency">— ms</span>
+        <span id="fps" class="badge muted" title="Frames per second">— fps</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar" aria-label="Online users">
+      <h3>Online</h3>
+      <ul id="user-list" class="users" aria-live="polite"></ul>
+      <div class="tip">
+        Use rooms: <code>?room=design</code> or <code>?room=main</code>.
+        <ol>
+          <li>Open in multiple tabs with the same room</li>
+          <li>Draw and watch live sync ✨</li>
+        </ol>
+        <small>Transport auto-selects: WebSocket → BroadcastChannel → Local.</small>
+      </div>
+    </aside>
+
+    <section class="stage" aria-label="Drawing stage">
+      <div class="canvas-wrap">
+        <div class="metrics" id="metrics">— fps • — ms</div>
+        <canvas id="canvas" aria-label="Collaborative drawing surface"></canvas>
+        <div id="cursor-layer" class="cursor-layer" aria-hidden="true"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div>Vanilla JS • High-DPI • Offscreen buffer • Smooth curves • Rooms • Persistence</div>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
